@@ -1,99 +1,32 @@
 <template>
   <div class="contain">
-    <div class="slider">
-      <h3>Ação</h3>
-      <span v-on:mouseover="scrollEsquerda()" v-on:mouseout="clearScroll()" class="handle handlePrev active">
-        <i class="fa fa-caret-left" aria-hidden="true"></i>
-      </span>
-
-      <div id="scroller" class="row">
-        <div class="row__inner">
-          <div class="gui-card">
-            <div class="gui-card__media">
-              <img class="gui-card__img" src="https://img1.ibxk.com.br/2015/11/12/12134915138723.jpg?w=700" alt=""/>
-            </div>
-            <div class="gui-card__details">
-              <div class="gui-card__title">
-                Assassin’s Creed
-              </div>
-            </div>
-          </div>
-          <div class="gui-card">
-            <div class="gui-card__media">
-              <img class="gui-card__img" src="https://img1.ibxk.com.br/2015/11/12/12134915138723.jpg?w=700" alt=""/>
-            </div>
-            <div class="gui-card__details">
-              <div class="gui-card__title">
-                Assassin’s Creed
-              </div>
-            </div>
-          </div>
-          <div class="gui-card">
-            <div class="gui-card__media">
-              <img class="gui-card__img" src="https://img1.ibxk.com.br/2015/11/12/12134915138723.jpg?w=700" alt=""/>
-            </div>
-            <div class="gui-card__details">
-              <div class="gui-card__title">
-                Assassin’s Creed
-              </div>
-            </div>
-          </div>
-          <div class="gui-card">
-            <div class="gui-card__media">
-              <img class="gui-card__img" src="https://img1.ibxk.com.br/2015/11/12/12134915138723.jpg?w=700" alt=""/>
-            </div>
-            <div class="gui-card__details">
-              <div class="gui-card__title">
-                Assassin’s Creed
-              </div>
-            </div>
-          </div>
-          <div class="gui-card">
-            <div class="gui-card__media">
-              <img class="gui-card__img" src="https://img1.ibxk.com.br/2015/11/12/12134915138723.jpg?w=700" alt=""/>
-            </div>
-            <div class="gui-card__details">
-              <div class="gui-card__title">
-                Assassin’s Creed
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <span v-on:mouseover="scrollDireita()" v-on:mouseout="clearScroll()" class="handle handleNext active">
-        <i class="fa fa-caret-right" aria-hidden="true"></i>
-      </span>
-
-    </div>
+    <Categoria :key="categoria.id" v-for="categoria in categorias"
+               v-bind:titulo="categoria.nome"
+               v-bind:filmes="categoria.filmes">
+    </Categoria>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'App',
-  data() {
-    return {
-      intervalo: null
-    }
-  },
-  methods: {
-    scrollDireita() {
-      this.intervalo = setInterval(function () {
-        document.getElementById('scroller').scrollLeft += 1
-      }, 5);
+
+  import Categoria from './components/Categoria'
+
+  export default {
+    components: {
+      Categoria
     },
-    scrollEsquerda() {
-      this.intervalo = setInterval(function () {
-        document.getElementById('scroller').scrollLeft -= 1
-      }, 5);
+    name: 'App',
+    data() {
+      return {
+        categorias: []
+      }
     },
-    clearScroll() {
-      clearInterval(this.intervalo);
+    created() {
+        this.$http.get('http://localhost:3000/categorias').then(response => {
+          this.categorias = response.body;
+        });
     }
   }
-}
 </script>
 
 <style>
@@ -119,6 +52,7 @@ export default {
     align-items: center;
     width: 100%;
   }
+
   * {
     box-sizing: border-box;
   }
@@ -127,11 +61,13 @@ export default {
   p {
     text-align: center;
   }
+
   p {
     width: 100%;
     max-width: 500px;
     margin: auto;
   }
+
   a:link,
   a:hover,
   a:active,
@@ -141,10 +77,12 @@ export default {
     color: #95a5a6;
     text-decoration: none;
   }
+
   a:hover {
     color: #7f8c8d;
     text-decoration: underline;
   }
+
   .contain {
     width: 1329px
   }
@@ -158,7 +96,7 @@ export default {
     touch-action: pan-y;
   }
 
-  .slider h3{
+  .slider h3 {
     position: absolute;
     top: 22px;
     z-index: 30;
@@ -200,7 +138,7 @@ export default {
     color: #fff;
   }
 
-  .fa{
+  .fa {
     font-size: 46px;
     margin-top: 120px;
   }
@@ -208,6 +146,7 @@ export default {
   .row {
     overflow: hidden;
   }
+
   .row__inner {
     -webkit-transition: 450ms -webkit-transform;
     transition: 450ms -webkit-transform;
@@ -233,12 +172,14 @@ export default {
     -webkit-transform-origin: center left;
     transform-origin: center left;
   }
+
   .gui-card__img {
     width: 250px;
     height: 140.625px;
     -o-object-fit: cover;
     object-fit: cover;
   }
+
   .gui-card__details {
     position: absolute;
     bottom: 0;
@@ -247,11 +188,12 @@ export default {
     top: 0;
     font-size: 10px;
     opacity: 0;
-    background: -webkit-linear-gradient(bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
     -webkit-transition: 450ms opacity;
     transition: 450ms opacity;
   }
+
   .gui-card__details:after,
   .gui-card__details:before {
     content: '';
@@ -260,6 +202,7 @@ export default {
     left: 50%;
     display: #000;
   }
+
   .gui-card__details:after {
     margin-top: -25px;
     margin-left: -25px;
@@ -269,9 +212,10 @@ export default {
     line-height: 50px;
     text-align: center;
     border-radius: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1;
   }
+
   .gui-card__details:before {
     content: '▶';
     left: 0;
@@ -282,26 +226,32 @@ export default {
     text-align: center;
     z-index: 2;
   }
+
   .gui-card:hover .gui-card__details {
     opacity: 1;
   }
+
   .gui-card__title {
     position: absolute;
     bottom: 0;
     padding: 10px;
   }
+
   .row__inner:hover {
     -webkit-transform: translate3d(-62.5px, 0, 0);
     transform: translate3d(-62.5px, 0, 0);
   }
+
   .row__inner:hover .gui-card {
     opacity: 0.3;
   }
+
   .row__inner:hover .gui-card:hover {
     -webkit-transform: scale(1.5);
     transform: scale(1.5);
     opacity: 1;
   }
+
   .gui-card:hover ~ .gui-card {
     -webkit-transform: translate3d(125px, 0, 0);
     transform: translate3d(125px, 0, 0);
